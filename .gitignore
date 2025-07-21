@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Java Backend (.class files, build artifacts)
 appointment-scheduler-backend/target/
 appointment-scheduler-backend/.mvn/
@@ -27,6 +26,13 @@ appointment-scheduler-frontend/.env.production.local
 appointment-scheduler-frontend/npm-debug.log*
 appointment-scheduler-frontend/yarn-debug.log*
 appointment-scheduler-frontend/yarn-error.log*
+
+# Python AI Agent Service
+ai-agent-service/ai-env/
+ai-agent-service/__pycache__/
+ai-agent-service/*.pyc
+ai-agent-service/models/
+*.gguf
 
 # IDE and Editor files
 .vscode/
