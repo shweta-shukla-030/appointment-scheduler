@@ -1,0 +1,70 @@
+# Java Backend (.class files, build artifacts)
+appointment-scheduler-backend/target/
+appointment-scheduler-backend/.mvn/
+appointment-scheduler-backend/mvnw
+appointment-scheduler-backend/mvnw.cmd
+appointment-scheduler-backend/.settings/
+appointment-scheduler-backend/.project
+appointment-scheduler-backend/.classpath
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+*.iml
+*.ipr
+*.iws
+
+# React Frontend (node_modules, build files)
+appointment-scheduler-frontend/node_modules/
+appointment-scheduler-frontend/build/
+appointment-scheduler-frontend/.env
+appointment-scheduler-frontend/.env.local
+appointment-scheduler-frontend/.env.development.local
+appointment-scheduler-frontend/.env.test.local
+appointment-scheduler-frontend/.env.production.local
+appointment-scheduler-frontend/npm-debug.log*
+appointment-scheduler-frontend/yarn-debug.log*
+appointment-scheduler-frontend/yarn-error.log*
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database files (optional - keep setup.sql)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
