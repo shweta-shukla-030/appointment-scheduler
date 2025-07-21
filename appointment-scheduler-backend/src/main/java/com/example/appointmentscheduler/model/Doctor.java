@@ -37,6 +37,20 @@ public class Doctor {
     private String location;
     
     private boolean available;
+    
+    // Additional fields for admin management
+    private String experience; // e.g., "5 years experience in Cardiology"
+    
+    @Column(length = 1000)
+    private String qualifications; // e.g., "MBBS, MD (Cardiology), Fellowship in Interventional Cardiology"
+    
+    @Column(length = 2000)
+    private String about; // Doctor's bio/description
+    
+    @Column(name = "contact_number")
+    private String contactNumber;
+    
+    private String email;
 
     // Default constructor
     public Doctor() {}
@@ -96,4 +110,19 @@ public class Doctor {
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }
+    
+    public String getExperience() { return experience; }
+    public void setExperience(String experience) { this.experience = experience; }
+    
+    public String getQualifications() { return qualifications; }
+    public void setQualifications(String qualifications) { this.qualifications = qualifications; }
+    
+    public String getAbout() { return about; }
+    public void setAbout(String about) { this.about = about; }
+    
+    public String getContactNumber() { return contactNumber; }
+    public void setContactNumber(String contactNumber) { this.contactNumber = contactNumber; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 }

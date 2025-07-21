@@ -4,7 +4,21 @@ CREATE DATABASE appointment_scheduler;
 -- Connect to the database
 \c appointment_scheduler;
 
--- Create doctors table
+-- Create users table for authentication
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20),
+    location VARCHAR(255),
+    role VARCHAR(20) NOT NULL CHECK (role IN ('PATIENT', 'ADMIN')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create doctors table with additional fields for admin management
 CREATE TABLE doctors (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -15,6 +29,11 @@ CREATE TABLE doctors (
     rating DECIMAL(3,2),
     location VARCHAR(255) NOT NULL,
     available BOOLEAN DEFAULT TRUE,
+    experience TEXT,  -- e.g., "5 years experience in Cardiology"
+    qualifications TEXT,  -- e.g., "MBBS, MD (Cardiology)"
+    about TEXT,  -- Doctor's bio/description
+    contact_number VARCHAR(20),
+    email VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -87,9 +106,44 @@ INSERT INTO doctor_reviews (doctor_id, review_text) VALUES
 (10, 'Professional gynecologist'),
 (10, 'Thorough and respectful care');
 
--- Verify data
-SELECT d.name, d.speciality, d.location, COUNT(r.id) as review_count 
+-- Insert sample users (patients and admin)
+INSERT INTO users (email, password, first_name, last_name, phone_number, location, role) VALUES
+-- Sample patients
+('patient1@email.com', 'password123', 'John', 'Doe', '+1-555-0101', 'New York', 'PATIENT'),
+('patient2@email.com', 'password123', 'Jane', 'Smith', '+1-555-0102', 'Los Angeles', 'PATIENT'),
+('patient3@email.com', 'password123', 'Mike', 'Johnson', '+1-555-0103', 'Chicago', 'PATIENT'),
+('patient4@email.com', 'password123', 'Sarah', 'Wilson', '+1-555-0104', 'Miami', 'PATIENT'),
+('patient5@email.com', 'password123', 'David', 'Brown', '+1-555-0105', 'New York', 'PATIENT'),
+
+-- Sample admin users
+('admin@hospital.com', 'admin123', 'Hospital', 'Administrator', '+1-555-9999', 'New York', 'ADMIN'),
+('admin2@clinic.com', 'admin123', 'Clinic', 'Manager', '+1-555-9998', 'Los Angeles', 'ADMIN');
+
+-- Update existing doctors with additional information
+UPDATE doctors SET 
+    experience = '10+ years of experience in ' || speciality,
+    qualifications = 'MBBS, MD (' || speciality || ')',
+    about = 'Experienced medical professional specializing in ' || speciality || ' with a focus on patient-centered care.',
+    contact_number = '+1-555-' || LPAD(id::text, 4, '0'),
+    email = LOWER(REPLACE(name, ' ', '.')) || '@hospital.com'
+WHERE id <= 10;
+
+-- Verify all data
+SELECT 'Users Count' as table_name, COUNT(*) as count FROM users
+UNION ALL
+SELECT 'Doctors Count', COUNT(*) FROM doctors
+UNION ALL
+SELECT 'Reviews Count', COUNT(*) FROM doctor_reviews
+UNION ALL
+SELECT 'Bookings Count', COUNT(*) FROM doctor_booking
+UNION ALL
+SELECT 'Appointments Count', COUNT(*) FROM appointments;
+
+-- Show sample data
+SELECT 'SAMPLE USERS:' as info;
+SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.location FROM users u ORDER BY u.role, u.id;
+
+SELECT 'SAMPLE DOCTORS:' as info;
+SELECT d.id, d.name, d.speciality, d.location, d.fees_per_hour, d.available, d.email 
 FROM doctors d 
-LEFT JOIN doctor_reviews r ON d.id = r.doctor_id 
-GROUP BY d.id, d.name, d.speciality, d.location 
-ORDER BY d.name;
+ORDER BY d.speciality, d.name;

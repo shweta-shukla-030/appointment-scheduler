@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/App.css';
 
-const BookingPage = () => {
+const BookingPage = ({ user, onLogout }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { doctor, selectedDate, selectedTimeSlot } = location.state || {};
@@ -14,13 +14,18 @@ const BookingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bookingStatus, setBookingStatus] = useState(null); // 'success', 'error', null
 
-  // Sample patient data (hardcoded as requested)
-  const samplePatient = {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@email.com',
-    phone: '+1-555-0123',
-    age: 32
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
+
+  // Use actual user data instead of sample patient
+  const currentPatient = {
+    id: user?.id || 1,
+    name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : 'John Doe',
+    email: user?.email || 'john.doe@email.com',
+    phone: user?.phoneNumber || '+1-555-0123',
+    age: 32 // You might want to add age field to User model later
   };
 
   useEffect(() => {
@@ -59,7 +64,7 @@ const BookingPage = () => {
       
       const bookingData = {
         doctorId: doctor.id,
-        patientId: samplePatient.id,
+        patientId: currentPatient.id,
         appointmentDate: selectedDate,
         startTime: startTimeStr.trim(),
         endTime: endTimeStr.trim(),
@@ -116,7 +121,7 @@ const BookingPage = () => {
                 <p><strong>Speciality:</strong> {doctor.speciality}</p>
                 <p><strong>Date:</strong> {selectedDate}</p>
                 <p><strong>Time:</strong> {selectedTimeSlot}</p>
-                <p><strong>Patient:</strong> {samplePatient.name}</p>
+                <p><strong>Patient:</strong> {currentPatient.firstName} {currentPatient.lastName}</p>
                 <p><strong>Reason:</strong> {appointmentDetails.reasonForVisit}</p>
                 <p><strong>Fees:</strong> ${doctor.feesPerHour}</p>
               </div>
@@ -160,6 +165,11 @@ const BookingPage = () => {
 
   return (
     <div className="booking-page">
+      <div className="user-header">
+        <span>Welcome, {user.firstName}!</span>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
+      </div>
+      
       <div className="booking-container">
         <div className="booking-header">
           <button 
@@ -199,10 +209,9 @@ const BookingPage = () => {
           <div className="patient-summary">
             <h2>Patient Information</h2>
             <div className="patient-info">
-              <p><strong>Name:</strong> {samplePatient.name}</p>
-              <p><strong>Email:</strong> {samplePatient.email}</p>
-              <p><strong>Phone:</strong> {samplePatient.phone}</p>
-              <p><strong>Age:</strong> {samplePatient.age}</p>
+              <p><strong>Name:</strong> {currentPatient.firstName} {currentPatient.lastName}</p>
+              <p><strong>Email:</strong> {currentPatient.email}</p>
+              <p><strong>Phone:</strong> {currentPatient.phoneNumber}</p>
             </div>
           </div>
 

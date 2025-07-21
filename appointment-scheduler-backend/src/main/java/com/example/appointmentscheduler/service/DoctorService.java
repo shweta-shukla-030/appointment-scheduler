@@ -140,4 +140,22 @@ public class DoctorService {
         
         return LocalTime.of(hour, minute);
     }
+    
+    // Additional methods for admin management
+    public Doctor saveDoctor(Doctor doctor) {
+        return doctorRepository.save(doctor);
+    }
+    
+    public Doctor findById(Long id) {
+        return doctorRepository.findById(id).orElse(null);
+    }
+    
+    public void deleteById(Long id) {
+        doctorRepository.deleteById(id);
+    }
+    
+    // Get all doctors including unavailable ones (for admin)
+    public List<Doctor> getAllDoctorsIncludingUnavailable() {
+        return doctorRepository.findAll();
+    }
 }

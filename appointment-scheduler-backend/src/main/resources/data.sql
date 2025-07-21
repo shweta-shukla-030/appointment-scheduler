@@ -28,3 +28,14 @@ VALUES
     (4, 'Very good with children, my kids love Dr. Davis.', 4),
     (5, 'Fixed my knee problem, excellent orthopedic surgeon.', 5)
 ON CONFLICT DO NOTHING;
+
+-- Sample users data (patients and admins)
+INSERT INTO users (email, password, first_name, last_name, phone_number, location, role, created_at, updated_at) VALUES
+('patient1@email.com', 'password123', 'John', 'Doe', '+1-555-0101', 'New York', 'PATIENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('patient2@email.com', 'password123', 'Jane', 'Smith', '+1-555-0102', 'Los Angeles', 'PATIENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('patient3@email.com', 'password123', 'Mike', 'Johnson', '+1-555-0103', 'Chicago', 'PATIENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('patient4@email.com', 'password123', 'Sarah', 'Wilson', '+1-555-0104', 'Miami', 'PATIENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('patient5@email.com', 'password123', 'David', 'Brown', '+1-555-0105', 'New York', 'PATIENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('admin@hospital.com', 'admin123', 'Hospital', 'Administrator', '+1-555-9999', 'New York', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('admin2@clinic.com', 'admin123', 'Clinic', 'Manager', '+1-555-9998', 'Los Angeles', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+ON CONFLICT (email) DO NOTHING;

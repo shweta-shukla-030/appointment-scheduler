@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DoctorCard from '../components/DoctorCard';
 import DoctorFilter from '../components/DoctorFilter';
 import DoctorAPI from '../services/DoctorAPI';
 
-const HomePage = () => {
+const HomePage = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+  
   // State for doctors and filters
   const [allDoctors, setAllDoctors] = useState([]);
   const [filteredDoctors, setFilteredDoctors] = useState([]);
@@ -15,6 +18,11 @@ const HomePage = () => {
   const [specialities, setSpecialities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleLogout = () => {
+    onLogout();
+    navigate('/login');
+  };
 
   // Mock data as fallback - In real application, this would come from API
   const mockDoctors = [
@@ -226,6 +234,24 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
+      {/* User Header with Logout */}
+      <div className="user-header">
+        <div className="user-info">
+          <span className="welcome-text">
+            Welcome, <strong>{user?.firstName} {user?.lastName}</strong>
+          </span>
+          <span className="user-role">{user?.role === 'PATIENT' ? '👤 Patient' : '🛡️ Admin'}</span>
+        </div>
+        <div className="header-actions">
+          <button className="profile-btn" onClick={() => navigate('/profile')}>
+            My Profile
+          </button>
+          <button className="logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      </div>
+
       <header className="page-header">
         <h1>Doctor Appointment Scheduler</h1>
         <p>Find and book appointments with qualified healthcare professionals</p>
