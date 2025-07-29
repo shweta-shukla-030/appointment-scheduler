@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminRegisterPage from './pages/AdminRegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
+import ChatPage from './chat/pages/ChatPage';
 import './styles/App.css';
 
 function App() {
@@ -86,6 +87,16 @@ function App() {
             element={
               currentUser && currentUser.role === 'PATIENT' ? (
                 <BookingPage user={currentUser} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/chat" 
+            element={
+              currentUser && currentUser.role === 'PATIENT' ? (
+                <ChatPage user={currentUser} onLogout={handleLogout} />
               ) : (
                 <Navigate to="/login" replace />
               )

@@ -7,7 +7,7 @@ const AdminDashboard = ({ user, onLogout }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showAddForm, setShowAddForm] = useState(false);
-    const [editingDoctor, setEditingDoctor] = useState(null);
+    // const [editingDoctor, setEditingDoctor] = useState(null); // TODO: Implement edit functionality
     const [newDoctor, setNewDoctor] = useState({
         name: '',
         speciality: '',
@@ -242,7 +242,7 @@ const AdminDashboard = ({ user, onLogout }) => {
                                         </button>
                                         <button 
                                             className="edit-btn"
-                                            onClick={() => setEditingDoctor(doctor)}
+                                            onClick={() => alert('Edit functionality coming soon!')}
                                         >
                                             Edit
                                         </button>

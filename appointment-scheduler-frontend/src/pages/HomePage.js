@@ -126,44 +126,44 @@ const HomePage = ({ user, onLogout }) => {
 
   // Initialize data on component mount
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Try to load data from API
+        const [doctorsData, locationsData, specialitiesData] = await Promise.all([
+          DoctorAPI.getAllDoctors(),
+          DoctorAPI.getLocations(),
+          DoctorAPI.getSpecialities()
+        ]);
+        
+        setAllDoctors(doctorsData);
+        setFilteredDoctors(doctorsData);
+        setLocations(locationsData);
+        setSpecialities(specialitiesData);
+        
+      } catch (error) {
+        console.warn('API not available, using mock data:', error);
+        setError('API not available, using sample data');
+        
+        // Use mock data as fallback
+        setAllDoctors(mockDoctors);
+        setFilteredDoctors(mockDoctors);
+        
+        // Extract unique locations and specialities from mock data
+        const uniqueLocations = [...new Set(mockDoctors.map(doctor => doctor.location))].sort();
+        const uniqueSpecialities = [...new Set(mockDoctors.map(doctor => doctor.speciality))].sort();
+        
+        setLocations(uniqueLocations);
+        setSpecialities(uniqueSpecialities);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadData();
   }, []);
-
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Try to load data from API
-      const [doctorsData, locationsData, specialitiesData] = await Promise.all([
-        DoctorAPI.getAllDoctors(),
-        DoctorAPI.getLocations(),
-        DoctorAPI.getSpecialities()
-      ]);
-      
-      setAllDoctors(doctorsData);
-      setFilteredDoctors(doctorsData);
-      setLocations(locationsData);
-      setSpecialities(specialitiesData);
-      
-    } catch (error) {
-      console.warn('API not available, using mock data:', error);
-      setError('API not available, using sample data');
-      
-      // Use mock data as fallback
-      setAllDoctors(mockDoctors);
-      setFilteredDoctors(mockDoctors);
-      
-      // Extract unique locations and specialities from mock data
-      const uniqueLocations = [...new Set(mockDoctors.map(doctor => doctor.location))].sort();
-      const uniqueSpecialities = [...new Set(mockDoctors.map(doctor => doctor.speciality))].sort();
-      
-      setLocations(uniqueLocations);
-      setSpecialities(uniqueSpecialities);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Filter doctors based on selected criteria
   const filterDoctors = async () => {
@@ -243,6 +243,10 @@ const HomePage = ({ user, onLogout }) => {
           <span className="user-role">{user?.role === 'PATIENT' ? '👤 Patient' : '🛡️ Admin'}</span>
         </div>
         <div className="header-actions">
+          <button className="ai-assistant-btn" onClick={() => navigate('/chat')}>
+            <i className="fas fa-robot"></i>
+            AI Assistant
+          </button>
           <button className="profile-btn" onClick={() => navigate('/profile')}>
             My Profile
           </button>
