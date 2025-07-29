@@ -1,9 +1,16 @@
 
-# Doctor Appointment Scheduler
+# Doctor Appointment Scheduler with AI Agent
 
-A full-stack web application for scheduling doctor appointments with real-time availability checking and comprehensive filtering capabilities.
+A full-stack web application for scheduling doctor appointments with **AI-powered symptom analysis** and 3-tier intelligent fallback mechanism for accurate specialty recommendations.
 
 ## 🚀 Features
+
+### **🤖 AI-Powered Symptom Analysis**
+- ✅ **3-Tier Fallback System**: Static mapping → GPT4All analysis → Clarification modal
+- ✅ **Smart Symptom Recognition**: Natural language processing for symptom-to-specialty mapping
+- ✅ **Adaptive Confidence Scoring**: High confidence for clear symptoms, low confidence triggers clarification
+- ✅ **Interactive Clarification Flow**: Modal popup for vague symptoms with follow-up questions
+- ✅ **Real-time Chat Interface**: Conversational AI for symptom analysis and doctor recommendations
 
 ### **Advanced Doctor Search & Filtering**
 - ✅ Search doctors by location and specialty
@@ -31,20 +38,37 @@ A full-stack web application for scheduling doctor appointments with real-time a
 
 ## 🏗️ Architecture
 
+### **AI Agent Service (FastAPI + GPT4All)**
+```
+ai-agent-service/
+├── ai_server.py              # FastAPI server with 3-tier fallback logic
+├── prompts.py                # Symptom mapping & GPT4All prompts
+├── requirements.txt          # Python dependencies
+└── ai-env/                   # Virtual environment
+```
+
 ### **Frontend (React 18)**
 ```
 appointment-scheduler-frontend/
 ├── src/
+│   ├── chat/
+│   │   ├── components/
+│   │   │   ├── ChatWidget.js        # Main chat interface
+│   │   │   └── ClarificationModal.js # Clarification popup
+│   │   ├── services/
+│   │   │   └── ChatService.js       # AI agent API integration
+│   │   └── styles/
+│   │       └── Chat.css             # Chat styling
 │   ├── components/
-│   │   ├── DoctorCard.js          # Doctor profile cards
-│   │   └── DoctorFilter.js        # Advanced filtering component
+│   │   ├── DoctorCard.js            # Doctor profile cards
+│   │   └── DoctorFilter.js          # Advanced filtering component
 │   ├── pages/
-│   │   ├── HomePage.js            # Main search & results page
-│   │   └── BookingPage.js         # Appointment booking page
+│   │   ├── HomePage.js              # Main search & results page
+│   │   └── BookingPage.js           # Appointment booking page
 │   ├── services/
-│   │   └── DoctorAPI.js           # API integration service
+│   │   └── DoctorAPI.js             # API integration service
 │   └── styles/
-│       └── App.css                # Complete styling
+│       └── App.css                  # Complete styling
 ```
 
 ### **Backend (Spring Boot 3.0)**
@@ -79,6 +103,12 @@ doctors              # Doctor profiles with specialties & ratings
 
 ## 🛠️ Technologies Used
 
+### **AI Agent Service**
+- **FastAPI** - Modern Python web framework for AI service
+- **GPT4All** - Local LLM for symptom analysis (orca-mini-3b model)
+- **Python 3.11+** - Core language with virtual environment
+- **Uvicorn** - ASGI server for FastAPI deployment
+
 ### **Frontend**
 - **React 18** - Modern UI library with hooks
 - **React Router DOM** - Client-side routing for navigation
@@ -101,6 +131,7 @@ doctors              # Doctor profiles with specialties & ratings
 
 Before running this application, make sure you have:
 
+- ✅ **Python 3.11+** and **pip** for AI agent service
 - ✅ **Node.js 16+** and **npm** for React frontend
 - ✅ **Java 17+** and **Maven 3.6+** for Spring Boot backend  
 - ✅ **PostgreSQL 16.9** running on **port 5433**
@@ -118,20 +149,40 @@ CREATE DATABASE appointment_scheduler;
 psql -U postgres -h localhost -p 5433 -d appointment_scheduler -f database/setup.sql
 ```
 
-### **2. Backend Setup (Spring Boot)**
+### **2. AI Agent Service Setup (FastAPI + GPT4All)**
+```bash
+# Navigate to AI service directory
+cd ai-agent-service
+
+# Create and activate virtual environment
+python -m venv ai-env
+ai-env\Scripts\activate  # Windows
+# source ai-env/bin/activate  # macOS/Linux
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the AI service (will download GPT4All model on first run)
+python ai_server.py
+
+# AI service will start on http://localhost:5000
+# Health check: http://localhost:5000/health
+```
+
+### **3. Backend Setup (Spring Boot)**
 ```bash
 # Navigate to backend directory
 cd appointment-scheduler-backend
 
-# Compile and start the backend server
+# Compile and start the backend server (with memory optimization if needed)
 mvn clean compile
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx512m -Xms256m"
 
 # Server will start on http://localhost:8080
 # API endpoints available at http://localhost:8080/api/
 ```
 
-### **3. Frontend Setup (React)**
+### **4. Frontend Setup (React)**
 ```bash
 # Navigate to frontend directory
 cd appointment-scheduler-frontend
@@ -150,30 +201,38 @@ npm start
 
 ## 🎯 How to Use
 
-### **Step 1: Search Doctors**
+### **Step 1: AI-Powered Symptom Analysis**
 1. Open **http://localhost:3000** in your browser
-2. Use the **4 filter options**:
+2. Use the **AI Chat Widget** in the bottom-right corner
+3. **Describe your symptoms** in natural language:
+   - ✅ **Clear symptoms**: "I have chest pain" → Direct specialty recommendation
+   - ✅ **Complex symptoms**: "I feel dizzy and nauseous after eating" → AI analysis
+   - ✅ **Vague symptoms**: "I don't feel good" → Clarification modal appears
+
+### **Step 2: Clarification Flow (for vague symptoms)**
+1. When the clarification modal appears:
+   - Answer the follow-up questions about your symptoms
+   - Provide specific details (location, type, duration)
+   - Submit clarification for refined recommendation
+
+### **Step 3: Get Specialty Recommendation**
+- Receive AI-powered doctor specialty recommendation
+- See confidence level and reasoning
+- Option to proceed with doctor search in that specialty
+
+### **Step 4: Search & Book Doctors**
+1. Use the **4 filter options**:
    - **Location**: Filter by city (New York, Los Angeles, etc.)
-   - **Speciality**: Filter by medical specialty (Cardiology, etc.)
+   - **Speciality**: Use AI recommendation or select manually
    - **Date**: Select appointment date using calendar picker
    - **Time Slot**: Choose from available hourly slots (9 AM - 5 PM)
 
-### **Step 2: View Available Doctors**
-- See real-time search results with doctor profiles
-- View doctor details: name, specialty, experience, fees, rating
-- Check availability status based on your selected date/time
-
-### **Step 3: Book Appointment**
+### **Step 5: Complete Booking**
 1. Click **"Book Appointment"** on any available doctor
 2. Review doctor details and appointment summary
-3. Fill in **"Reason for Visit"** (required field)
+3. Fill in **"Reason for Visit"** (can use AI symptom analysis)
 4. Add optional additional notes
 5. Click **"Confirm Booking"** to complete
-
-### **Step 4: Confirmation**
-- Get booking confirmation with all appointment details
-- Appointment is saved to database with status "CONFIRMED"
-- View success page with booking reference
 
 ## 📊 Database Schema
 
@@ -238,7 +297,72 @@ Content-Type: application/json
 }
 ```
 
+## 🧠 AI Implementation Details
+
+### **3-Tier Fallback System**
+
+The AI agent uses a sophisticated 3-tier fallback mechanism:
+
+#### **Level 1: Static Symptom Mapping (< 1 second)**
+- **Fast lookup** for common symptoms like "chest pain", "back pain"
+- **Word boundary matching** prevents false matches (e.g., "ear" in "heart")
+- **Direct specialty mapping** with 100% confidence
+- **40+ predefined symptoms** covering major specialties
+
+#### **Level 2: GPT4All Dynamic Analysis (2-5 seconds)**
+- **Local LLM processing** using orca-mini-3b model
+- **Confidence scoring** (0.0-1.0) based on symptom clarity
+- **JSON response parsing** with fallback keyword detection
+- **Specialty recommendation** for complex symptom descriptions
+
+#### **Level 3: Clarification Flow (Interactive)**
+- **Modal popup** for vague symptoms (confidence < 0.7)
+- **Follow-up questions** about location, type, duration
+- **Combined message processing** after clarification
+- **Level 2.5 override** for clearly identified post-clarification symptoms
+
+### **Confidence Logic**
+```javascript
+// High Confidence (0.8-1.0) - Direct recommendation
+"chest pain" → Cardiology (0.9)
+"stomach pain after eating" → Gastroenterology (0.8)
+
+// Low Confidence (0.3-0.6) - Requires clarification  
+"not feeling good" → Clarification modal (0.4)
+"something is wrong" → Clarification modal (0.3)
+
+// Clear Symptom Override
+"dizzy and nauseous after eating" → Gastroenterology (boosted to 0.8)
+```
+
+### **API Endpoints**
+
+#### **AI Agent Service (Port 5000)**
+- `GET /` - Health check and model status
+- `POST /chat` - Main symptom analysis endpoint
+- `GET /health` - Detailed service health
+
+#### **Backend Integration (Port 8080)**
+- `POST /api/chat` - Frontend to backend chat proxy
+- `POST /api/clarification` - Clarification processing
+
 ## 🏃‍♂️ Development Workflow
+
+### **AI Service Development**
+```bash
+# Navigate to AI service folder
+cd ai-agent-service
+
+# Activate virtual environment
+ai-env\Scripts\activate
+
+# Install new dependencies
+pip install package_name
+pip freeze > requirements.txt
+
+# Run with debug logging
+python ai_server.py
+```
 
 ### **Backend Development**
 ```bash
@@ -278,6 +402,29 @@ SELECT * FROM doctor_booking WHERE booking_date = '2025-07-22';
 ```
 
 ## 🔧 Troubleshooting
+
+### **AI Service Issues**
+
+**❌ GPT4All model not loading**
+```bash
+# Solution: Ensure sufficient memory and re-download model
+rm -rf ~/.cache/gpt4all/  # Clear model cache
+python ai_server.py  # Re-download model
+```
+
+**❌ "No module named 'gpt4all'"**
+```bash
+# Solution: Reinstall in virtual environment
+ai-env\Scripts\activate
+pip install --upgrade gpt4all fastapi uvicorn
+```
+
+**❌ AI service returns wrong specialty**
+```bash
+# Solution: Check confidence scores in logs
+# Look for "GPT4All parsed response - Confidence: X.X"
+# Adjust prompts.py CONFIDENCE_RULES if needed
+```
 
 ### **Common Issues & Solutions**
 
