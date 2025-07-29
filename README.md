@@ -6,7 +6,7 @@ A full-stack web application for scheduling doctor appointments with **AI-powere
 ## 🚀 Features
 
 ### **🤖 AI-Powered Symptom Analysis**
-- ✅ **3-Tier Fallback System**: Static mapping → GPT4All analysis → Clarification modal
+- ✅ **3-Tier Fallback System**: Static mapping → LLM analysis → Clarification modal
 - ✅ **Smart Symptom Recognition**: Natural language processing for symptom-to-specialty mapping
 - ✅ **Adaptive Confidence Scoring**: High confidence for clear symptoms, low confidence triggers clarification
 - ✅ **Interactive Clarification Flow**: Modal popup for vague symptoms with follow-up questions
